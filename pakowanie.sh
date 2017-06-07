@@ -16,6 +16,7 @@ getRozszerzenie(){
 }
 utworz(){
 	a="/home/grzesiek/Desktop wynik.txt"
+	
 	tar -cvf $KATALOG/$NAZWA.tar -C $a
 
 	dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
@@ -46,6 +47,10 @@ pakowanie(){
 				if [ $EXIT -eq 0 ]; then
 					while [ $EXIT -ne 1 ]; do
 						getNazwa
+						WYNIK=$(find $KATALOG  -name $NAZWA.tar)
+						if [[ -n $WYNIK ]]; then
+							dialog --yesno "Juz istnieje takie archiwum. Czy chcesz je nadpisac?" 0 0
+						fi
 						EXIT=$?
 						if [ $EXIT -eq 0 ]; then
 							pliki
