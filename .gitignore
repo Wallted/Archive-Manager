@@ -1,2 +1,2 @@
-Ignorowanie plików .txt, które pełnią rolę sprawdzającą.
-.txt
+#Ignorowanie plików .txt, które pełnią rolę sprawdzającą.
+*.txt
