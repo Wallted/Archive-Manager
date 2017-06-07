@@ -11,17 +11,20 @@ dialog --msgbox "Witaj w skrypcie obslugujacym archiwa." 8 30
 OPCJA=1
 LIST=(1 "Pakowanie plików" ON, 2 "Rozpakowywanie archiwum" OFF, 3 "Wyjscie" OFF )
 while [ ${OPCJA} -ne 3 ]; do
-	OPCJA=$( dialog --backtitle "" --radiolist "Wybierz opcje:" 10 40 5 "${LIST[@]}" 3>&1 1>&2 2>&3)
-	if [ $? -eq 1 -o -z "$OPCJA" ]; then
-		OPCJA=3
-	fi
-	if [ $OPCJA -eq 1 ]; then
+	OPCJA=$( dialog --backtitle "" --radiolist "Wybierz opcje: <SPACE>" 10 40 5 "${LIST[@]}" 3>&1 1>&2 2>&3)
+	if [ $? -eq 1 ]; then
+		break
+	elif [ -z "$OPCJA" ]; then
+		OPCJA=4
+	elif [ $OPCJA -eq 1 ]; then
 		echo "PAKOWEANIE" >>d.txt
-		pakowanie
+		pakowanie 1
 	elif [ $OPCJA -eq 2 ]; then
 		rozpakuj
 	fi
 	#echo $OPCJA >>g.tx
 done
+
+dialog --msgbox "Do widzenia!" 8 30
 
 
