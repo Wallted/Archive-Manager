@@ -21,7 +21,7 @@ while [ ${OPCJA} -ne 3 ]; do
 	elif [ $OPCJA -eq 2 ]; then
 		rozpakuj
 	fi
-	#echo $OPCJA >>g.txt
+	#echo $OPCJA >>g.tx
 done
 
 
