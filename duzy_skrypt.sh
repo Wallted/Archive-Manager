@@ -16,7 +16,7 @@ while [ ${OPCJA} -ne 3 ]; do
 		OPCJA=3
 	fi
 	if [ $OPCJA -eq 1 ]; then
-		echo "PAKOWEANIE" >>g.txt
+		echo "PAKOWEANIE" >>d.txt
 		pakowanie
 	elif [ $OPCJA -eq 2 ]; then
 		rozpakuj
