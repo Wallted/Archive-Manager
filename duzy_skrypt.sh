@@ -17,7 +17,6 @@ while [ ${OPCJA} -ne 3 ]; do
 	elif [ -z "$OPCJA" ]; then
 		OPCJA=4
 	elif [ $OPCJA -eq 1 ]; then
-		echo "PAKOWEANIE" >>d.txt
 		pakowanie 1
 	elif [ $OPCJA -eq 2 ]; then
 		rozpakuj
