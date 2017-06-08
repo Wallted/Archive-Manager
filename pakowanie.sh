@@ -1,5 +1,6 @@
 #!/bin/bash
 LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off)
+EXT=("" "tar" "zip" "7z")
 KATALOG=$HOME/Desktop
 PLIK=$HOME/
 getPlik(){
@@ -65,11 +66,16 @@ pakowanie(){
 				if [ $EXIT -eq 0 ]; then
 					while [ $EXIT -ne 1 ]; do
 						getNazwa
-						WYNIK=$(find $KATALOG  -name $NAZWA.tar)
+						WYNIK=$(find $KATALOG  -name $NAZWA.${EXT[$ROZSZERZENIE]})
 						if [[ -n $WYNIK ]]; then
-							dialog --yes-button "TAk" --no-button "NIE" --yesno "Juz istnieje takie archiwum. Czy chcesz je nadpisac?" 0 0
+							dialog --yes-button "TAk" --no-button "NIE" --yesno "Juz istnieje takie archiwum. Czy chcesz 								je nadpisac?" 0 0
+							EXIT=$?
+							if [ $EXIT -eq 0 ]; then
+								rm $KATALOG/$NAZWA.${EXT[$ROZSZERZENIE]}
+							fi
+						else
+							EXIT=$?
 						fi
-						EXIT=$?
 						if [ $EXIT -eq 0 ]; then
 							> files.$$
 							while [ $EXIT -ne 1 ]; do
