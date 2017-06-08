@@ -21,7 +21,6 @@ while [ ${OPCJA} -ne 3 ]; do
 	elif [ $OPCJA -eq 2 ]; then
 		rozpakuj
 	fi
-	#echo $OPCJA >>g.tx
 done
 
 dialog --msgbox "Do widzenia!" 8 30

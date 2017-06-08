@@ -11,23 +11,20 @@ getKatalog(){
 	KATALOG=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --title "Wybierz folder dla archiwum: " --dselect $HOME/Desktop 14 48)
 }
 getRozszerzenie(){
-	ROZSZERZENIE=$( dialog --backtitle ""  --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 10 30 5 "${LISTAROZSZ[@]}" 3>&1 1>&2 2>&3)
+	ROZSZERZENIE=$( dialog --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 10 30 5 "${LISTAROZSZ[@]}" 3>&1 1>&2 2>&3)
 }
 utworz(){
 	>files_to.$$
 	cat files.$$ | rev | sed "s#//#/#" | awk 'BEGIN { FS="/"; OFS="/" } ; {$2=$2" " }; {print}' | rev > files_to.$$
-	#files_to.$$
-	#cat files_to.$$ > FILE
-	readarray a < files.$$
+	readarray a < files_to.$$
 	echo ${a[@]} > d.txt
-	tar -cvf $KATALOG/$NAZWA.tar -C ${a[@]}
-
-	dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
+	tar -cvf $KATALOG/$NAZWA.tar ${a[@]} 
 	rm files_to.$$
-rm files.$$
+	rm files.$$
+	dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
 }
 pakowanie(){
-	#musisz ogarnac co jak nie wybierze nic
+	#musisz ogarnac co jak nie wybierze nic #esc #podebuguj wstecz
 	EXIT=0
 	while [ $EXIT -ne 1 ]; do
 		getRozszerzenie
@@ -49,14 +46,14 @@ pakowanie(){
 							while [ $EXIT -ne 1 ]; do
 								getPlik
 								EXIT=$?
-								#echo $PLIK/ >> files.$$
 								if [ $EXIT -eq 1 ]; then
 									utworz
 									return
 								else
-									echo $PLIK/ >> files.$$
+									echo -C $PLIK/ >> files.$$
 								fi
 							done
+							rm files.$$
 						fi
 					done
 					EXIT=0
