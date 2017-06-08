@@ -3,25 +3,24 @@ LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off)
 KATALOG=$HOME/Desktop
 PLIK=$HOME/
 getPlik(){
-	PLIK=$(dialog --stdout --ok-button "DODAJ" --cancel-button "UTWORZ" --fselect $PLIK 14 48 0)	
+	PLIK=$(dialog --stdout --ok-button "DODAJ" --cancel-button "UTWORZ" --fselect $PLIK 0 0 0)	
 }
 getNazwa(){
 	NAZWA=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --inputbox "Wprowadz nazwe archiwum" 0 0)
 }
 getKatalog(){
-	KATALOG=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --title "Wybierz folder dla archiwum: " --dselect $KATALOG 14 48)
+	KATALOG=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --title "Wybierz folder dla archiwum: " --dselect $KATALOG 0 0)
 }
 getRozszerzenie(){
-	ROZSZERZENIE=$( dialog --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 10 30 5 "${LISTAROZSZ[@]}" 3>&1 1>&2 2>&3)
+	ROZSZERZENIE=$( dialog --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 0 0 0 "${LISTAROZSZ[@]}" 3>&1 1>&2 2>&3)
 }
 utworz(){
 	>files_to.$$
-	
-	cat files.$$ | rev | sed "s#//#/#" | awk 'BEGIN { FS="/"; OFS="/" } ; {$2=$2" " }; {print}' | rev > files_to.$$
+	cat files.$$ | rev | sed "s#//#/#" | awk 'BEGIN { FS="/"; OFS="/" } ; {$2=$2" " }; {print}' | rev | uniq > files_to.$$
 	if [ $ROZSZERZENIE -eq 1 ]; then
 		
 		readarray a < files_to.$$
-e		cho ${a[@]} > d.txt
+		#echo ${a[@]} > d.txt
 		tar -cvf $KATALOG/$NAZWA.tar ${a[@]} 
 	elif [ $ROZSZERZENIE -eq 2 ]; then
 		cat files_to.$$ | cut -d " " -f 2 > file_dirs.$$
@@ -33,6 +32,18 @@ e		cho ${a[@]} > d.txt
 			pushd ${DIRS[$CNT]}
 			zip -r $KATALOG/$NAZWA $file
 			popd
+		((CNT++))
+		done
+	else	
+		cat files_to.$$ | cut -d " " -f 2 > file_dirs.$$
+		cat files_to.$$ | cut -d " " -f 3 | sed "s#/##"> files.$$
+		readarray FILES < files.$$
+		readarray DIRS < file_dirs.$$
+		CNT=0
+		for file in ${FILES[@]}; do	
+			FILE=$( echo ${DIRS[$CNT]}$file | sed "s# ##" )
+			echo $FILE >>d.txt
+			7z a $KATALOG/$NAZWA.7z $FILE
 		((CNT++))
 		done
 	fi
