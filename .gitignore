@@ -1,2 +1,7 @@
 #Ignorowanie plików .txt, które pełnią rolę sprawdzającą.
 *.txt
+
+#Utworzone archiwa
+*.zip
+*.tar
+*.7z
