@@ -11,7 +11,7 @@ dialog --msgbox "Witaj w skrypcie obslugujacym archiwa." 8 30
 OPCJA=1
 LIST=(1 "Pakowanie plików" ON, 2 "Rozpakowywanie archiwum" OFF, 3 "Wyjscie" OFF )
 while [ ${OPCJA} -ne 3 ]; do
-	OPCJA=$( dialog --backtitle "" --radiolist "Wybierz opcje: <SPACE>" 10 40 5 "${LIST[@]}" 3>&1 1>&2 2>&3)
+	OPCJA=$( dialog --backtitle "" --cancel-button "Wyjdz" --ok-button "Wybierz" --radiolist "Wybierz opcje: <SPACE>" 10 40 5 "${LIST[@]}" 3>&1 1>&2 2>&3)
 	if [ $? -eq 1 ]; then
 		break
 	elif [ -z "$OPCJA" ]; then

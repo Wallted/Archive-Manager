@@ -1,13 +1,14 @@
 #!/bin/bash
 LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off)
 EXT=("" "tar" "zip" "7z")
-PLIK=$HOME/
-KATALOG=$HOME/Desktop
+PLIK=$(pwd)
+KATALOG=$(pwd)
 getPlik(){
 	PLIK=$(dialog --stdout --ok-button "DODAJ" --cancel-button "UTWORZ" --fselect $PLIK 0 0 0)	
 	EXIT=$?
 	if [[ -z $PLIK ]]; then
-		PLIK=$HOME/
+		PLIK=$(pwd)
+
 	fi
 }
 getNazwa(){
@@ -21,7 +22,7 @@ getKatalog(){
 	KATALOG=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --title "Wybierz folder dla archiwum: " --dselect $KATALOG 0 0)
 	EXIT=$?
 	if [[ -z $KATALOG ]]; then
-		KATALOG=$HOME/Desktop
+		KATALOG=$(pwd)
 	fi
 }
 getRozszerzenie(){
@@ -61,7 +62,12 @@ utworz(){
 	rm files_to.$$
 	rm files.$$
 	rm file_dirs.$$
-	dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
+	WYNIK=$(find $KATALOG -name $NAZWA.${EXT[$ROZSZERZENIE]})
+	if [[ -n $WYNIK ]]; then
+		dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
+	else
+		dialog --msgbox "Blad, cos poszlo nie tak!" 0 0
+	fi
 }
 pakowanie(){
 	#musisz ogarnac co jak nie wybierze nic #esc #podebuguj wstecz, definitywnie nie dziala wstecz
@@ -72,7 +78,6 @@ pakowanie(){
 		if [ $EXIT -eq 0 ]; then
 			while [ $EXIT -ne 1 ]; do
 				getKatalog
-				EXIT=$?
 				if [ $EXIT -eq 0 ]; then
 					while [ $EXIT -ne 1 ]; do
 						getNazwa
@@ -81,7 +86,7 @@ pakowanie(){
 							break
 						fi
 						if [[ -n $WYNIK ]]; then
-							dialog --yes-button "TAk" --no-button "NIE" --yesno "Tutaj istnieje juz takie archiwum. Czy chcesz 								je nadpisac?" 0 0
+							dialog --yes-button "TAK" --no-button "NIE" --yesno "Tutaj istnieje juz takie archiwum. Czy chcesz 								je nadpisac?" 0 0
 							EXIT=$?
 							if [ $EXIT -eq 0 ]; then
 								rm $KATALOG/$NAZWA.${EXT[$ROZSZERZENIE]}
