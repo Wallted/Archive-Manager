@@ -8,7 +8,6 @@ getPlik(){
 	EXIT=$?
 	if [[ -z $PLIK ]]; then
 		PLIK=$(pwd)
-
 	fi
 }
 getNazwa(){
@@ -27,6 +26,7 @@ getKatalog(){
 }
 getRozszerzenie(){
 	ROZSZERZENIE=$( dialog --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 0 0 0 "${LISTAROZSZ[@]}" 3>&1 1>&2 2>&3)
+	EXIT=$?
 }
 utworz(){
 	>files_to.$$
@@ -70,21 +70,19 @@ utworz(){
 	fi
 }
 pakowanie(){
-	#musisz ogarnac co jak nie wybierze nic #esc #podebuguj wstecz, definitywnie nie dziala wstecz
 	EXIT=0
 	while [ $EXIT -ne 1 ]; do
 		getRozszerzenie
-		EXIT=$?
 		if [ $EXIT -eq 0 ]; then
 			while [ $EXIT -ne 1 ]; do
 				getKatalog
 				if [ $EXIT -eq 0 ]; then
 					while [ $EXIT -ne 1 ]; do
 						getNazwa
-						WYNIK=$(find $KATALOG  -name $NAZWA.${EXT[$ROZSZERZENIE]})
 						if [ $EXIT -eq 1 ]; then
 							break
 						fi
+						WYNIK=$(find $KATALOG  -name $NAZWA.${EXT[$ROZSZERZENIE]})
 						if [[ -n $WYNIK ]]; then
 							dialog --yes-button "TAK" --no-button "NIE" --yesno "Tutaj istnieje juz takie archiwum. Czy chcesz 								je nadpisac?" 0 0
 							EXIT=$?
