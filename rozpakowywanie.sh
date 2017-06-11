@@ -18,7 +18,10 @@ rozpakuj() {
 		continue
 	fi	
 	if [ $EXT = "tar" ]; then
-		mkdir $KATALOG/$FOLDER #SPRAWDZANIE CZY FOLDER ISTNIEJE
+		if [[ -n  $(find $KATALOG/$FOLDER) ]]; then
+			FOLDER="$FOLDER-kopia_($$)"
+		fi
+		mkdir $KATALOG/$FOLDER
 		tar -xvf $PLIK -C $KATALOG/$FOLDER
 	elif [ $EXT = "zip" ]; then
 		unzip $PLIK -d $KATALOG/$FOLDER
@@ -29,7 +32,11 @@ rozpakuj() {
 		continue
 	fi
 	rm to_ex.$$
-	dialog --msgbox "ARCHIWUM ROZPAKOWANO POMYSLNIE!" 0 0 #SAME ^ 
+	if [[ -n  $(find $KATALOG/$FOLDER) ]]; then
+		dialog --msgbox "ARCHIWUM ROZPAKOWANO POMYSLNIE!" 0 0
+	else
+		dialog --msgbox "BLAD! COS POSZLO NIE TAK!" 0 0
+	fi
 	return	
 	done
 }

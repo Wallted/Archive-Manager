@@ -12,7 +12,7 @@ getPlik(){
 }
 getNazwa(){
 	NAZWA=$(dialog --stdout --ok-button "DALEJ" --cancel-button "WSTECZ" --inputbox "Wprowadz nazwe archiwum" 0 0)
-	EXIT=$?
+	EXIT=$?	
 	if [[ -z $NAZWA ]]; then
 		NAZWA='NO-NAME('$$')'
 	fi
