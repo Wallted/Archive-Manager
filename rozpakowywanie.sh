@@ -9,8 +9,7 @@ rozpakuj() {
 		return
 	fi
 	EXT=$(echo $PLIK | cut -d "." -f 2)
-	echo $PLIK > to_ex.$$
-	FOLDER=$(cat to_ex.$$ | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1) 
+	FOLDER=$(echo $PLIK | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1) 
 	KATALOG=$(dialog --stdout --ok-button "ROZPAKUJ" --cancel-button "WSTECZ" --title "Wybierz folder do rozpakowanie: " --dselect $KATALOG 0 0)
 	EXIT=$?
 	if [ $EXIT -eq 1 ]; then
@@ -19,7 +18,7 @@ rozpakuj() {
 	fi	
 	if [ $EXT = "tar" ]; then
 		if [[ -n  $(find $KATALOG/$FOLDER) ]]; then
-			FOLDER="$FOLDER-kopia_($$)"
+			FOLDER="$FOLDER-kopia"
 		fi
 		mkdir $KATALOG/$FOLDER
 		tar -xvf $PLIK -C $KATALOG/$FOLDER
@@ -31,7 +30,6 @@ rozpakuj() {
 		dialog --msgbox "TO NIE JEST ARCHIWUM!" 0 0 
 		continue
 	fi
-	rm to_ex.$$
 	if [[ -n  $(find $KATALOG/$FOLDER) ]]; then
 		dialog --msgbox "ARCHIWUM ROZPAKOWANO POMYSLNIE!" 0 0
 	else
