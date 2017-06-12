@@ -4,7 +4,7 @@ rozpakuj() {
 	while [ true ]; do
 	PLIK=$(dialog --stdout --ok-button "WYBIERZ" --cancel-button "WSTECZ" --fselect $PLIK 0 0 0)
 	EXIT=$?
-	if [ $EXIT -eq 1 ]; then
+	if [ $EXIT -ne 0 ]; then
 		PLIK=$PWD
 		return
 	fi
@@ -12,7 +12,7 @@ rozpakuj() {
 	FOLDER=$(echo $PLIK | rev | cut -d "/" -f 1 | rev | cut -d "." -f 1) 
 	KATALOG=$(dialog --stdout --ok-button "ROZPAKUJ" --cancel-button "WSTECZ" --title "Wybierz folder do rozpakowanie: " --dselect $KATALOG 0 0)
 	EXIT=$?
-	if [ $EXIT -eq 1 ]; then
+	if [ $EXIT -ne 0 ]; then
 		KATALOG=$PWD
 		continue
 	fi	

@@ -17,6 +17,7 @@ while [ ${OPCJA} -ne 3 ]; do
 		break
 	elif [ -z "$OPCJA" ]; then
 		dialog --msgbox "UZYJ SPACJI, ABY WYBRAC OPCJE" 0 0
+		OPCJA=-1
 	elif [ $OPCJA -eq 1 ]; then
 		pakowanie 1
 	elif [ $OPCJA -eq 2 ]; then

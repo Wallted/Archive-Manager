@@ -27,6 +27,11 @@ getKatalog(){
 getRozszerzenie(){
 	ROZSZERZENIE=$( dialog --ok-button "DALEJ" --cancel-button "WSTECZ" --radiolist "Wybierz rozszerzenie:" 0 0 0 "${LISTAROZSZ[@]}" 3>&1 1>&2 			2>&3)
 	EXIT=$?
+	if [[ -z $ROZSZERZENIE ]]; then
+		if [ $EXIT -eq 0 ]; then
+			getRozszerzenie
+		fi
+	fi
 }
 utworz(){
 	cat /tmp/files.$$ | rev | sed "s#//#/#" | awk 'BEGIN { FS="/"; OFS="/" } ; {$2=$2" " }; {print}' | rev | uniq > /tmp/files_to.$$
@@ -69,13 +74,13 @@ utworz(){
 }
 pakowanie(){
 	EXIT=0
-	while [ $EXIT -ne 1 ]; do
+	while [ $EXIT -eq 0 ]; do
 		getRozszerzenie
 		if [ $EXIT -eq 0 ]; then
-			while [ $EXIT -ne 1 ]; do
+			while [ $EXIT -eq 0 ]; do
 				getKatalog
 				if [ $EXIT -eq 0 ]; then
-					while [ $EXIT -ne 1 ]; do
+					while [ $EXIT -eq 0 ]; do
 						getNazwa
 						if [ $EXIT -eq 1 ]; then
 							break
