@@ -1,8 +1,4 @@
 #!/bin/bash
-LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off, 4 ".bz2" off)
-EXT=("" "tar" "zip" "7z" "bz2")
-PLIK=$(pwd)
-KATALOG=$(pwd)
 getPlik(){
 	PLIK=$(dialog --stdout --ok-button "DODAJ" --cancel-button "UTWORZ" --fselect $PLIK 0 0 0)	
 	EXIT=$?
@@ -65,6 +61,10 @@ utworz(){
 		NAZWA=$(echo $PLIK | rev | cut -d "/" -f 1 | rev)
 		bzip2 -k $PLIK
 		mv $PLIK.bz2 $KATALOG
+	elif [ $ROZSZERZENIE -eq 5 ]; then
+		NAZWA=$(echo $PLIK | rev | cut -d "/" -f 1 | rev)
+		gzip -k $PLIK
+		mv $PLIK.gz $KATALOG
 	fi
 	rm /tmp/files_to.$$
 	rm /tmp/files.$$

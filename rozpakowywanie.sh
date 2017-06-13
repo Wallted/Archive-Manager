@@ -32,7 +32,12 @@ rozpakuj() {
 		cp $PLIK $KATALOG/$FOLDER
 		bunzip2 * 
 		popd
-
+	elif [ $EXT2 = "gz" ]; then		
+		mkdir $KATALOG/$FOLDER
+		pushd $KATALOG/$FOLDER 
+		cp $PLIK $KATALOG/$FOLDER
+		gunzip * 
+		popd
 	else
 		dialog --msgbox "TO NIE JEST ARCHIWUM!" 0 0 
 		continue

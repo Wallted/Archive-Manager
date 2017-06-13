@@ -1,0 +1,7 @@
+LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off, 4 ".bz2" off, 5 ".gz" off)
+EXT=("" "tar" "zip" "7z" "bz2" "gz")
+PLIK=$(pwd)
+KATALOG=$(pwd)
+
+OPCJA=1
+LIST=(1 "Pakowanie plików" ON, 2 "Rozpakowywanie archiwum" OFF, 3 "Wyjscie" OFF )
