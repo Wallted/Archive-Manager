@@ -1,6 +1,6 @@
 #!/bin/bash
-LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off)
-EXT=("" "tar" "zip" "7z")
+LISTAROZSZ=(1 ".tar" on, 2 ".zip" on, 3 ".7z" off, 4 ".bz2" off)
+EXT=("" "tar" "zip" "7z" "bz2")
 PLIK=$(pwd)
 KATALOG=$(pwd)
 getPlik(){
@@ -50,7 +50,7 @@ utworz(){
 			popd
 		((CNT++))
 		done
-	else	
+	elif [ $ROZSZERZENIE -eq 3 ]; then	
 		cat /tmp/files_to.$$ | cut -d " " -f 2 > /tmp/file_dirs.$$
 		cat /tmp/files_to.$$ | cut -d " " -f 3 | sed "s#/##"> /tmp/files.$$
 		readarray FILES < /tmp/files.$$
@@ -61,12 +61,15 @@ utworz(){
 			7z a $KATALOG/$NAZWA.7z $FILE
 		((CNT++))
 		done
+	elif [ $ROZSZERZENIE -eq 4 ]; then
+		NAZWA=$(echo $PLIK | rev | cut -d "/" -f 1 | rev)
+		bzip2 -k $PLIK
+		mv $PLIK.bz2 $KATALOG
 	fi
 	rm /tmp/files_to.$$
 	rm /tmp/files.$$
 	rm /tmp/file_dirs.$$
-	WYNIK=$(find $KATALOG -name $NAZWA.${EXT[$ROZSZERZENIE]})
-	if [[ -n $WYNIK ]]; then
+	if [[ -n $(find $KATALOG -name $NAZWA.${EXT[$ROZSZERZENIE]}) ]]; then
 		dialog --msgbox "Archiwum utworzono pomyślnie!" 0 0 
 	else
 		dialog --msgbox "Blad, cos poszlo nie tak!" 0 0
@@ -81,16 +84,18 @@ pakowanie(){
 				getKatalog
 				if [ $EXIT -eq 0 ]; then
 					while [ $EXIT -eq 0 ]; do
-						getNazwa
-						if [ $EXIT -eq 1 ]; then
-							break
-						fi
-						if [[ -n $(find $KATALOG  -name $NAZWA.${EXT[$ROZSZERZENIE]}) ]]; then
-							dialog --yes-button "TAK" --no-button "NIE" --yesno "Tutaj istnieje juz takie archiwum. Czy 									chcesz je nadpisac?" 0 0
-							EXIT=$?
-							if [ $EXIT -eq 0 ]; then
-								rm $KATALOG/$NAZWA.${EXT[$ROZSZERZENIE]}
+						if [ $ROZSZERZENIE -le 3 ]; then
+							getNazwa						
+							if [ $EXIT -eq 1 ]; then
+								break
 							fi
+							if [[ -n $(find $KATALOG  -name $NAZWA.${EXT[$ROZSZERZENIE]}) ]]; then
+								dialog --yes-button "TAK" --no-button "NIE" --yesno "Tutaj istnieje juz takie 									archiwum. Czy chcesz je nadpisac?" 0 0
+								EXIT=$?
+								if [ $EXIT -eq 0 ]; then
+									rm $KATALOG/$NAZWA.${EXT[$ROZSZERZENIE]}
+								fi
+						fi
 						fi	
 						if [ $EXIT -eq 0 ]; then
 							> /tmp/files.$$
@@ -101,8 +106,13 @@ pakowanie(){
 									return
 								elif [ $EXIT -eq 255 ]; then
 									break
-								else
+								else	
+									
 									echo -C $PLIK/ >> /tmp/files.$$
+									if [ $ROZSZERZENIE -ge 4 ]; then
+										utworz
+										return
+									fi
 								fi
 							done
 							rm /tmp/files.$$
